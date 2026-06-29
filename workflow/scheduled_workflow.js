@@ -1,3 +1,5 @@
+// workflow/scheduled_workflow.js
+
 import {
   normalizePipeline,
   normalizeProspectType,
@@ -28,7 +30,7 @@ import {
   toSafeNumber,
   asPlainObject,
   getAnalysisDispatcherDeps,
-} from "./incoming_customer_response.js";
+} from "../shared/workflow_runtime_shared.js";
 
 export function getSchedulerToken(env) {
   return safeText(env.SCHEDULER_TOKEN || env.WEBHOOK_TOKEN || "", 120);
@@ -292,7 +294,7 @@ export async function processScheduledWorkflow(env, item, meta = {}) {
       noteText: formatNote(analysis),
       dispatchReason: item.mode || meta.source || "scheduler",
     },
-    getAnalysisDispatcherDeps()
+    getAnalysisDispatcherDeps({ analyzeLeadOneCall })
   );
 
   return {
